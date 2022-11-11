@@ -1,0 +1,4 @@
+TABLE PRODUCTS
+1 => package_stock field dihapus
+2 => change unit_stock to stock
+3 => add discount on order_detail table
