@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="<?= base_url() ?>/assets/images/favicon.png">
     <style>
         * {
-            font-family: 'Courier New', Courier, monospace;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
             /* font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; */
             font-size: 10pt;
         }
