@@ -247,7 +247,7 @@ class OrderingModel extends CI_Model
         }
 
         $unitAmount = $checkProduct->unit_amount;
-        $unitStock = $checkProduct->unit_stock;
+        $unitStock = $checkProduct->stock;
         $countAllQtyOrder = $this->db->select_sum('qty')->from('stock_temp')->where([
             'product_id' => $product, 'order_id !=' => $order
         ])->get()->row_object();
@@ -309,32 +309,47 @@ class OrderingModel extends CI_Model
             ];
         }
         $unitAmount = $checkProduct->unit_amount;
-        $packageToUnit = $package * $unitAmount;
-        $totalQty = $packageToUnit + $unit;
-        $amount = $nominal * $totalQty;
+        if ($package <= 0) {
+            //YANG DIBELI SATUAN
+            $qty = $unit;
+            $price = $this->changePrice($nominal, $qty);
+        } else {
+            if ($unit <= 0) {
+                //YANG DIBELI PAKETAN
+                $qty = $unitAmount * $package;
+                $price = $nominal;
+            } else {
+                //YANG DIBELI SATUAN + PAKETAN
+                $qty = ($unitAmount * $package) + $unit;
+                $price = $this->changePrice($nominal, $qty);
+            }
+        }
 
-        if ($qtyBefore == $totalQty) {
+        if ($qtyBefore == $qty) {
             return [
                 'status' => 400,
                 'message' => 'Kuantiti sama dengan sebelumnya'
             ];
         }
 
-        $unitStock = $checkProduct->unit_stock;
+        $unitStock = $checkProduct->stock;
         $countAllQtyOrder = $this->db->select_sum('qty')->from('order_detail')->where([
             'product_id' => $product, 'id !=' => $id
         ])->get()->row_object();
         $allStock = $unitStock - $countAllQtyOrder->qty;
-        if ($totalQty > $allStock) {
+        if ($qty > $allStock) {
             return [
                 'status' => 400,
                 'message' => 'Stok melebihi batas tersedia'
             ];
         }
 
+
+
         $data = [
-            'qty' => $totalQty,
-            'amount' => $amount,
+            'qty' => $qty,
+            'discount' => $this->getDiscount($price * $qty),
+            'amount' => $price * $qty,
             'status' => 'CHANGED'
         ];
         $this->db->where('id', $id)->update('order_detail', $data);
@@ -347,12 +362,32 @@ class OrderingModel extends CI_Model
 
         $getOrder = $this->db->select_sum('amount')->from('order_detail')->where('order_id', $orderID)->get()->row_object();
         $this->db->where('id', $orderID)->update('orders', ['amount' => $getOrder->amount]);
-        $this->db->where(['order_id' => $orderID, 'product_id' => $product])->update('stock_temp', ['qty' => $totalQty]);
+        $this->db->where(['order_id' => $orderID, 'product_id' => $product])->update('stock_temp', ['qty' => $qty]);
 
         return [
             'status' => 200,
             'message' => 'Success'
         ];
+    }
+
+    public function changePrice($nominal, $qty)
+    {
+        $total = $nominal * $qty;
+        $endAmount = (int)substr($total, -3);
+
+        if ($endAmount > 0) {
+            if ($endAmount < 500) {
+                $added = 500 - $endAmount;
+                return $nominal + ceil($added / $qty);
+            } else if ($endAmount > 500) {
+                $added = 1000 - $endAmount;
+                return $nominal + ceil($endAmount / $qty);
+            } else {
+                return $nominal;
+            }
+        } else {
+            return $nominal;
+        }
     }
 
     public function saveOrder()
@@ -434,8 +469,9 @@ class OrderingModel extends CI_Model
 
     public function getDiscount($nominal)
     {
-        $endAmount = substr($nominal, -3);
-        if ($endAmount != 000) {
+        $endAmount = (int)substr($nominal, -3);
+
+        if ($endAmount > 0) {
             if ($endAmount < 500) {
                 return (int)$endAmount;
             } else if ($endAmount > 500) {

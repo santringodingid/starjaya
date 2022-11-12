@@ -28,6 +28,15 @@ if ($product) {
                 $stock = $packageStock . ' ' . $data->package . ' + ' . $unitStock . ' ' . $data->unit;
             }
         }
+
+        $roleUser = $this->session->userdata('role');
+        if ($roleUser == 'SALER' || $roleUser == 'COURIER') {
+            $packagePrice = $data->package_price + 2000;
+            $unitPrice = ceil($packagePrice / $unitAmount);
+        } else {
+            $packagePrice = $data->package_price;
+            $unitPrice = $data->unit_price;
+        }
     ?>
         <div class="col-md-6 col-lg-6 col-xl-6">
             <div class="card">
@@ -45,8 +54,8 @@ if ($product) {
                                     <?= $data->package ?> x <?= $unitAmount . ' ' . $data->unit ?>
                                 </div>
                                 <div class="col-12">
-                                    Rp. <?= number_format($data->package_price, 0, ',', '.') ?> x
-                                    Rp. <?= number_format($data->unit_price, 0, ',', '.') ?>
+                                    Rp. <?= number_format($packagePrice, 0, ',', '.') ?> x
+                                    Rp. <?= number_format($unitPrice, 0, ',', '.') ?>
                                 </div>
                                 <div class="col-12">
                                     <span class="text-success">

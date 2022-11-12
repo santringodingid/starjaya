@@ -22,30 +22,17 @@ if ($datas) {
                             <?= datetimeIDShortFormat($data->created_at) ?>
                         </div>
                         <div class="col-1 text-right">
-                            <div class="btn-group">
-                                <i style="cursor: pointer" class="fas fa-ellipsis-v" data-toggle="dropdown" aria-expanded="true"></i>
-                                <ul class="dropdown-menu dropdown-menu-right py-1 pr-0" x-placement="top-start" style="min-width: 0">
-                                    <li style="cursor: pointer" class="<?= ($status == 'ORDERED') ? '' : 'd-none' ?>" onclick="approveOrder(<?= $data->id ?>)">
-                                        <span class="dropdown-item text-xs">Konfirmasi</span>
-                                    </li>
-                                    <li style="cursor: pointer" class="<?= ($status == 'APPROVED') ? '' : 'd-none' ?>" onclick="deliverOrder(<?= $data->id ?>)">
-                                        <span class="dropdown-item text-xs">Proses Kirim</span>
-                                    </li>
-                                    <li style="cursor: pointer" class="<?= ($status == 'DELIVERED') ? '' : 'd-none' ?>">
-                                        <a href="<?= base_url() ?>ordering/done/<?= $data->id ?>" class="dropdown-item text-xs">Selesaikan</a>
-                                    </li>
-                                    <li style="cursor: pointer" class="<?= ($status == 'DONE') ? '' : 'd-none' ?>">
-                                        <a href="<?= base_url() ?>ordering/done/<?= $data->id ?>" class="dropdown-item text-xs">Cetak Faktur</a>
-                                    </li>
-                                    <li style="cursor: pointer" onclick="detailOrder(<?= $data->id ?>)">
-                                        <span class="dropdown-item text-xs">Lihat detail</span>
-                                    </li>
-                                </ul>
-                            </div>
+                            <i class="fas fa-clipboard-check fa-lg <?= ($status == 'ORDERED') ? '' : 'd-none' ?>" style="cursor: pointer" onclick="approveOrder(<?= $data->id ?>)"></i>
+                            <i style="cursor: pointer" onclick="deliverOrder(<?= $data->id ?>)" class="fas fa-truck fa-lg <?= ($status == 'APPROVED') ? '' : 'd-none' ?>"></i>
+                            <a class="<?= ($status == 'DELIVERED') ? '' : 'd-none' ?>" href="<?= base_url() ?>ordering/done/<?= $data->id ?>"><i class="fas fa-file-invoice-dollar fa-lg"></i></a>
+                            <form action="<?= base_url() ?>ordering/setprint" method="post" target="_blank" class="<?= ($status == 'DONE') ? '' : 'd-none' ?>" id="form-print">
+                                <input type="hidden" name="id" value="<?= $data->id ?>">
+                                <i style="cursor: pointer" class="fas fa-print fa-lg" onclick="printOut()"></i>
+                            </form>
                         </div>
                     </div>
                 </div>
-                <div class="card-body pt-2 pb-3">
+                <div class="card-body pt-2 pb-3" title="Klik untuk lihat detail" style="cursor: pointer" onclick="detailOrder(<?= $data->id ?>)">
                     <div class="row">
                         <div class="col-7">
                             <div class="row">

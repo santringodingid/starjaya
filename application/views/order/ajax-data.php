@@ -13,19 +13,16 @@ if ($datas) {
             <div class="card">
                 <div class="card-header text-xs">
                     <div class="row">
-                        <div class="col-5">
+                        <div class="col-6">
                             <i class="fas fa-receipt"></i>
                             <?= $data->id ?>
                         </div>
                         <div class="col-6">
                             <?= datetimeIDFormat($data->created_at) ?>
                         </div>
-                        <div class="col-1 text-right">
-                            <i style="cursor: pointer" onclick="detailTransaction(<?= $data->id ?>)" class="fas fa-ellipsis-v"></i>
-                        </div>
                     </div>
                 </div>
-                <div class="card-body pt-2 pb-3">
+                <div class="card-body pt-2 pb-3" title="Klik untuk lihat detail" style="cursor: pointer" onclick="detailTransaction(<?= $data->id ?>)">
                     <div class="row">
                         <div class="col-8">
                             <div class="row">

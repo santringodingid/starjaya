@@ -147,3 +147,5 @@ const deliverOrder = id => {
     })
 }
 
+const printOut = () => $('#form-print').submit()
+
