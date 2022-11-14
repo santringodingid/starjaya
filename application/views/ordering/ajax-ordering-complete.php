@@ -25,23 +25,21 @@
                 foreach ($data as $d) {
             ?>
                     <div class="row">
-                        <div class="col-11 text-xs">
-                            <span><?= $d['product'] ?></span> <br>
+                        <div class="col-11">
+                            <span class="text-xs"><?= $d['product'] ?></span> <br>
                             <div class="row pl-3">
-                                <?= $d['qty'] ?> <i class="ml-3"><?= $statusText[$d['status']] ?></i>
+                                <span onclick="editOrder(<?= $d['id'] ?>)" class="text-primary <?= ($d['status'] == 'CANCELED' || $statusOrder == 'DONE') ? 'd-none' : '' ?>"" style=" cursor: pointer" title="Klik untuk ubah kuantiti">
+                                    <?= $d['qty'] ?>
+                                </span>
+                                <span class="<?= ($d['status'] == 'CANCELED' || $statusOrder == 'DONE') ? '' : 'd-none' ?>">
+                                    <?= $d['qty'] ?>
+                                </span>
+                                <i class="ml-3"><?= $statusText[$d['status']] ?></i>
                             </div>
                         </div>
                         <div class="col-1 text-right">
-                            <div class="btn-group <?= ($d['status'] == 'CANCELED' || $statusOrder == 'DONE') ? 'd-none' : '' ?>">
-                                <i style="cursor: pointer" class="fas fa-ellipsis-v" data-toggle="dropdown" aria-expanded="true"></i>
-                                <ul class="dropdown-menu dropdown-menu-right py-1 pr-0" x-placement="top-start" style="min-width: 0">
-                                    <li style="cursor: pointer">
-                                        <span class="dropdown-item text-xs" onclick="editOrder(<?= $d['id'] ?>)">Edit</span>
-                                    </li>
-                                    <li style="cursor: pointer">
-                                        <span class="dropdown-item text-xs text-danger" onclick="cancelOrder(<?= $d['id'] ?>)">Batal</span>
-                                    </li>
-                                </ul>
+                            <div class="<?= ($d['status'] == 'CANCELED' || $statusOrder == 'DONE') ? 'd-none' : '' ?>">
+                                <i style="cursor: pointer" class="fas fa-trash text-danger" onclick="cancelOrder(<?= $d['id'] ?>)"></i>
                             </div>
                         </div>
                     </div>
@@ -55,7 +53,7 @@
             <button onclick="saveOrder()" class="btn btn-primary btn-sm btn-block <?= ($statusOrder != 'DELIVERED') ? 'd-none' : '' ?>">
                 Selesaikan Pesanan
             </button>
-            <form action="<?= base_url() ?>ordering/setprint" method="post" target="_blank" class="<?= ($statusOrder != 'DONE') ? 'd-none' : '' ?>">
+            <form action="<?= base_url() ?>ordering/print" method="post" target="_blank" class="<?= ($statusOrder != 'DONE') ? 'd-none' : '' ?>">
                 <input type="hidden" name="id" value="<?= $order ?>">
                 <button type="submit" class="btn btn-primary btn-sm btn-block">
                     Print Out Faktur

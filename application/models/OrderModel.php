@@ -150,8 +150,13 @@ class OrderModel extends CI_Model
         }
 
         // AMBIL QTY PRODUK INI YANG MASIH DALAM PROSES ORDER
+        $unitAmount = $data->unit_amount;
         $stock = $this->getProductStock($id);
-        $packageStock = floor($stock / $data->unit_amount);
+        if ($stock < $unitAmount) {
+            $packageStock = 0;
+        } else {
+            $packageStock = floor($stock / $data->unit_amount);
+        }
         $unitStock = $stock - ($data->unit_amount * $packageStock);
         if ($packageStock <= 0) {
             $stockFinal = $data->unit_amount . ' ' . $data->unit;

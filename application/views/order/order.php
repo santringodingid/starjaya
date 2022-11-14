@@ -95,4 +95,4 @@
 <?php $this->load->view('partials/footer'); ?>
 <script src="<?= base_url('template') ?>/plugins/moment/moment.min.js"></script>
 <script src="<?= base_url('template') ?>/plugins/daterangepicker/daterangepicker.js"></script>
-<script src="<?= base_url() ?>assets/js/order.js"></script>
+<?php $this->load->view('order/js-order'); ?>

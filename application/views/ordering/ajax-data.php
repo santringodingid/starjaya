@@ -12,41 +12,41 @@ if ($datas) {
 ?>
         <div class="col-md-6 col-lg-6 col-xl-6">
             <div class="card">
-                <div class="card-header text-xs">
+                <div class="card-body pt-2 pb-3">
                     <div class="row">
-                        <div class="col-5">
-                            <i class="fas fa-shopping-bag"></i>
-                            <?= $data->id ?>
+                        <div class="col-8">
+                            <small class="text-bold"><?= $data->customer ?></small> <br>
+                            <small class="text-muted"><?= $data->address ?></small>
                         </div>
-                        <div class="col-6">
-                            <?= datetimeIDShortFormat($data->created_at) ?>
-                        </div>
-                        <div class="col-1 text-right">
-                            <i class="fas fa-clipboard-check fa-lg <?= ($status == 'ORDERED') ? '' : 'd-none' ?>" style="cursor: pointer" onclick="approveOrder(<?= $data->id ?>)"></i>
-                            <i style="cursor: pointer" onclick="deliverOrder(<?= $data->id ?>)" class="fas fa-truck fa-lg <?= ($status == 'APPROVED') ? '' : 'd-none' ?>"></i>
-                            <a class="<?= ($status == 'DELIVERED') ? '' : 'd-none' ?>" href="<?= base_url() ?>ordering/done/<?= $data->id ?>"><i class="fas fa-file-invoice-dollar fa-lg"></i></a>
-                            <form action="<?= base_url() ?>ordering/setprint" method="post" target="_blank" class="<?= ($status == 'DONE') ? '' : 'd-none' ?>" id="form-print">
-                                <input type="hidden" name="id" value="<?= $data->id ?>">
-                                <i style="cursor: pointer" class="fas fa-print fa-lg" onclick="printOut()"></i>
-                            </form>
+                        <div class="col-4">
+                            <small>
+                                <?= $data->id ?> <br>
+                                <?= dateTimeShortenFormat($data->created_at) ?>
+                            </small>
                         </div>
                     </div>
-                </div>
-                <div class="card-body pt-2 pb-3" title="Klik untuk lihat detail" style="cursor: pointer" onclick="detailOrder(<?= $data->id ?>)">
+                    <hr class="my-1">
                     <div class="row">
-                        <div class="col-7">
-                            <div class="row">
-                                <div class="col-12">
-                                    <small class="text-primary"><?= $data->customer ?></small>
-                                </div>
-                                <div class="col-12">
-                                    <small><?= $data->address ?></small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-5 text-xs">
+                        <div class="col-8 text-xs" style="cursor: pointer" title="Klik untuk lihat detail" onclick="detailOrder(<?= $data->id ?>)">
                             Rp. <?= number_format($data->amount, 0, ',', '.') ?> <br>
                             <i><?= $statusText[$status]; ?></i>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-sm btn-primary btn-block mt-1 <?= ($status == 'ORDERED') ? '' : 'd-none' ?>" onclick="approveOrder(<?= $data->id ?>)">
+                                <i class="fas fa-clipboard-check fa-lg"></i> Konfirmasi
+                            </button>
+                            <button class="btn btn-sm btn-primary btn-block mt-1 <?= ($status == 'APPROVED') ? '' : 'd-none' ?>" onclick="deliverOrder(<?= $data->id ?>)">
+                                <i class="fas fa-truck fa-lg"></i> Kirim
+                            </button>
+                            <a class="btn btn-sm btn-block btn-primary mt-1 <?= ($status == 'DELIVERED') ? '' : 'd-none' ?>" href="<?= base_url() ?>ordering/done/<?= $data->id ?>">
+                                <i class="fas fa-file-invoice-dollar fa-lg"></i> Selesai
+                            </a>
+                            <form action="<?= base_url() ?>ordering/print" method="post" target="_blank" class="<?= ($status == 'DONE') ? '' : 'd-none' ?>" id="form-print">
+                                <input type="hidden" name="id" value="<?= $data->id ?>">
+                                <button type="submit" class="btn btn-primary btn-sm mt-1 btn-block">
+                                    <i class="fas fa-print"></i> Print
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

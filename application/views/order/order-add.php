@@ -138,4 +138,4 @@
 
 <?php $this->load->view('partials/footer'); ?>
 <script src="<?= base_url('template') ?>/plugins/autoNumeric.js"></script>
-<script src="<?= base_url() ?>assets/js/order-add.js"></script>
+<?php $this->load->view('order/js-order-add'); ?>

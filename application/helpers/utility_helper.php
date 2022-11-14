@@ -48,6 +48,15 @@ function datetimeIDShortFormat($tanggal)
     return $pecahkan[2] . ' ' . $bulan[(int)$pecahkan[1]] . ' ' . $pecahkan[0] . ' ' . $jam;
 }
 
+function dateTimeShortenFormat($tanggal)
+{
+    $tgl = date('Y-m-d', strtotime($tanggal));
+    $jam = date('H:i:s', strtotime($tanggal));
+    $pecahkan = explode('-', $tgl);
+
+    return $pecahkan[2] . '/' . $pecahkan[1] . '/' . $pecahkan[0] . ' ' . $jam;
+}
+
 function datetimeIDDate($tanggal)
 {
     $tgl = date('Y-m-d', strtotime($tanggal));

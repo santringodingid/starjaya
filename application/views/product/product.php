@@ -197,7 +197,4 @@
 <?php $this->load->view('partials/footer'); ?>
 <script src="<?= base_url() ?>template/plugins/jquery-validation/jquery.validate.min.js"></script>
 <script src="<?= base_url() ?>template/plugins/jquery-validation/additional-methods.min.js"></script>
-<script src="<?= base_url() ?>assets/js/product.js"></script>
-</body>
-
-</html>
+<?php $this->load->view('product/js-product'); ?>

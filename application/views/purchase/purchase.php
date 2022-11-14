@@ -93,4 +93,4 @@
 <?php $this->load->view('partials/footer'); ?>
 <script src="<?= base_url('template') ?>/plugins/moment/moment.min.js"></script>
 <script src="<?= base_url('template') ?>/plugins/daterangepicker/daterangepicker.js"></script>
-<script src="<?= base_url() ?>assets/js/purchase.js"></script>
+<?php $this->load->view('purchase/js-purchase'); ?>

@@ -114,16 +114,10 @@ class Ordering extends CI_Controller
         echo json_encode($result);
     }
 
-    public function setPrint()
+    public function print()
     {
-        $id = encrypt_url($this->input->post('id', true));
-
-        redirect('ordering/print/' . $id);
-    }
-
-    public function print($id)
-    {
-        $id = decrypt_url($id);
+        // $id = decrypt_url($id);
+        $id = $this->input->post('id', true);
         $data = [
             'title' => 'Cetak Faktur',
             'data' => $this->om->dataprint($id)
