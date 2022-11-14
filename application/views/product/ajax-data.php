@@ -17,7 +17,12 @@ if ($product) {
 
         $stock = $data->stock;
         $unitAmount = $data->unit_amount;
-        $packageStock = floor($stock / $unitAmount);
+
+        if ($stock < $unitAmount) {
+            $packageStock = 0;
+        } else {
+            $packageStock = floor($stock / $unitAmount);
+        }
         $unitStock = $stock - ($unitAmount * $packageStock);
         if ($packageStock <= 0) {
             $stock = $unitAmount . ' ' . $data->unit;
