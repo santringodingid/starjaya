@@ -1,4 +1,3 @@
-TABLE PRODUCTS
-1 => package_stock field dihapus
-2 => change unit_stock to stock
-3 => add discount on order_detail table
+TABLE MARKETS/CUSTOMERS
+1 => Add created_at and updated_at field
+2 => Change ID field customers table
