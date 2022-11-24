@@ -293,6 +293,7 @@ class OrderModel extends CI_Model
                     'id' => $d->id,
                     'product' => $d->name,
                     'qty' => $this->getDetailProductOrder($d->product_id, $d->qty),
+                    'price' => number_format($d->price, 0, ',', '.'),
                     'nominal' => number_format($d->nominal, 0, ',', '.'),
                     'discount' => number_format($d->discount, 0, ',', '.'),
                     'amount' => number_format($d->amount, 0, ',', '.'),

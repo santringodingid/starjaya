@@ -23,13 +23,16 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <small class="text-left"><?= $d['qty'] ?></small>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-3">
+                                        <small class="text-left"><?= $d['price'] ?></small>
+                                    </div>
+                                    <div class="col-3">
                                         <small class="text-center"><?= $d['nominal'] ?></small>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <small class="text-right"><?= $d['amount'] ?></small>
                                     </div>
                                 </div>
