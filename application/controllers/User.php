@@ -69,19 +69,4 @@ class User extends CI_Controller
 
         echo json_encode($response);
     }
-
-    public function reset()
-    {
-        $this->db->empty_table('log_price');
-        $this->db->empty_table('orders');
-        $this->db->empty_table('order_detail');
-        $this->db->empty_table('purchases');
-        $this->db->empty_table('purchase_detail');
-        $this->db->empty_table('stock_temp');
-        $this->db->update('products', [
-            'package_price' => 0,
-            'unit_price' => 0,
-            'stock' => 0,
-        ]);
-    }
 }

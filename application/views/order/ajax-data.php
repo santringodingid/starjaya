@@ -35,7 +35,7 @@ if ($datas) {
                             </div>
                         </div>
                         <div class="col-4 text-xs">
-                            Rp. <?= number_format($data->amount, 0, ',', '.') ?> <br>
+                            Rp. <?= number_format($data->amount - $data->canceled_amount, 0, ',', '.') ?> <br>
                             <i><?= $status[$data->status]; ?></i>
                         </div>
                     </div>

@@ -21,30 +21,32 @@ if ($datas) {
                         <div class="col-4">
                             <small>
                                 <?= $data->id ?> <br>
-                                <?= dateTimeShortenFormat($data->created_at) ?>
+                                <small class="text-muted">
+                                    <?= dateTimeShortenFormat($data->created_at) ?>
+                                </small>
                             </small>
                         </div>
                     </div>
                     <hr class="my-1">
                     <div class="row">
                         <div class="col-8 text-xs" style="cursor: pointer" title="Klik untuk lihat detail" onclick="detailOrder(<?= $data->id ?>)">
-                            Rp. <?= number_format($data->amount, 0, ',', '.') ?> <br>
+                            Rp. <?= number_format($data->amount - $data->canceled_amount, 0, ',', '.') ?> <br>
                             <i><?= $statusText[$status]; ?></i>
                         </div>
                         <div class="col-4">
-                            <button class="btn btn-sm btn-primary btn-block mt-1 <?= ($status == 'ORDERED') ? '' : 'd-none' ?>" onclick="approveOrder(<?= $data->id ?>)">
-                                <i class="fas fa-clipboard-check fa-lg"></i> Konfirmasi
+                            <button class="btn btn-xs btn-primary btn-block mt-1 <?= ($status == 'ORDERED') ? '' : 'd-none' ?>" onclick="approveOrder(<?= $data->id ?>)">
+                                Konfirmasi
                             </button>
-                            <button class="btn btn-sm btn-primary btn-block mt-1 <?= ($status == 'APPROVED') ? '' : 'd-none' ?>" onclick="deliverOrder(<?= $data->id ?>)">
-                                <i class="fas fa-truck fa-lg"></i> Kirim
+                            <button class="btn btn-xs btn-primary btn-block mt-1 <?= ($status == 'APPROVED') ? '' : 'd-none' ?>" onclick="deliverOrder(<?= $data->id ?>)">
+                                Kirim
                             </button>
-                            <a class="btn btn-sm btn-block btn-primary mt-1 <?= ($status == 'DELIVERED') ? '' : 'd-none' ?>" href="<?= base_url() ?>ordering/done/<?= $data->id ?>">
-                                <i class="fas fa-file-invoice-dollar fa-lg"></i> Selesai
+                            <a class="btn btn-xs btn-block btn-success mt-1 <?= ($status == 'DELIVERED') ? '' : 'd-none' ?>" href="<?= base_url() ?>ordering/done/<?= $data->id ?>">
+                                Selesaikan
                             </a>
                             <form action="<?= base_url() ?>ordering/print" method="post" target="_blank" class="<?= ($status == 'DONE') ? '' : 'd-none' ?>" id="form-print">
                                 <input type="hidden" name="id" value="<?= $data->id ?>">
-                                <button type="submit" class="btn btn-primary btn-sm mt-1 btn-block">
-                                    <i class="fas fa-print"></i> Print
+                                <button type="submit" class="btn btn-default btn-xs mt-1 btn-block">
+                                    Print
                                 </button>
                             </form>
                         </div>

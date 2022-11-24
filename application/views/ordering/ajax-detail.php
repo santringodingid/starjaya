@@ -1,15 +1,6 @@
 <div class="card mb-0">
     <div class="card-body p-0 pb-2" style="max-height: 60.2vh; overflow: auto;">
         <table class="table table-head-fixed table-hover table-sm">
-            <thead>
-                <tr>
-                    <th>PRODUK</th>
-                    <th>QTY</th>
-                    <th colspan="2">HARGA</th>
-                    <th colspan="2">JUMLAH</th>
-                    <th class="text-center">STATUS</th>
-                </tr>
-            </thead>
             <tbody>
                 <?php
                 $statusText = [
@@ -23,25 +14,25 @@
                 ?>
                         <tr>
                             <td>
-                                <small><?= $d['product'] ?></small>
-                            </td>
-                            <td>
-                                <small><?= $d['qty'] ?></small>
-                            </td>
-                            <td>
-                                <small>Rp. </small>
-                            </td>
-                            <td class="text-right">
-                                <small><?= $d['nominal'] ?></small>
-                            </td>
-                            <td>
-                                <small>Rp. </small>
-                            </td>
-                            <td class="text-right">
-                                <small><?= $d['amount'] ?></small>
-                            </td>
-                            <td class="text-center">
-                                <?= $statusText[$d['status']] ?>
+                                <div class="row">
+                                    <div class="col-7">
+                                        <small><?= $d['product'] ?></small>
+                                    </div>
+                                    <div class="col-5">
+                                        <?= $statusText[$d['status']] ?>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <small class="text-left"><?= $d['qty'] ?></small>
+                                    </div>
+                                    <div class="col-4">
+                                        <small class="text-center"><?= $d['nominal'] ?></small>
+                                    </div>
+                                    <div class="col-4">
+                                        <small class="text-right"><?= $d['amount'] ?></small>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     <?php

@@ -5,7 +5,7 @@
     <!-- Main content -->
     <section class="content p-3">
         <div class="row">
-            <div class="col-md-7 col-lg-7 col-xl-7 mb-2">
+            <div class="col-12 col-md-7 col-lg-7 col-xl-7 mb-2">
                 <?php if ($setting['invoice'] > 0) { ?>
                     <h6 class="mb-0"><span class="text-primary"> <?= $setting['customer_name'] ?></span></h6>
                     <small>Invoice Number : <b><?= $setting['invoice'] ?></b></small>
@@ -15,9 +15,9 @@
                     </a>
                 <?php } ?>
             </div>
-            <div class="col-6 col-md-3 col-lg-3 col-xl-3 mb-2">
-                <?php if ($setting['invoice'] <= 0) { ?>
-                    <select id="changeCustomer" class="form-control form-control-sm w-100">
+            <?php if ($setting['invoice'] <= 0) { ?>
+                <div class="col-8 col-md-3 col-lg-3 col-xl-3 mb-2">
+                    <select id="changeCustomer" class="form-control form-control-sm w-100 select2bs4">
                         <option value="">..:Pilih Toko:..</option>
                         <?php
                         if ($customer) {
@@ -29,33 +29,37 @@
                         }
                         ?>
                     </select>
-                <?php
-                } else {
-                ?>
+                </div>
+            <?php
+            } else {
+            ?>
+                <div class="col-6 col-md-3 col-lg-3 col-xl-3 mb-2">
                     <button type="button" onclick="cancelOrder()" id="remove-invoice" class="btn btn-sm btn-danger btn-block">
-                        <i class="fa fa-trash"></i> Batalkan Pemesanan
+                        <i class="fa fa-trash"></i> Batalkan
                     </button>
-                <?php
-                }
-                ?>
-            </div>
-            <div class="col-6 col-md-2 col-lg-2 col-xl-2 mb-3">
-                <?php
-                if ($setting['invoice'] <= 0) {
-                ?>
+                </div>
+            <?php
+            }
+            ?>
+            <?php
+            if ($setting['invoice'] <= 0) {
+            ?>
+                <div class="col-4 col-md-2 col-lg-2 col-xl-2 mb-3">
                     <button type="button" id="add-invoice" class="btn btn-sm btn-primary btn-block">
-                        <i class="fa fa-plus-circle"></i> Buat Nomor Faktur
+                        <i class="fa fa-plus-circle"></i> Mulai
                     </button>
-                <?php
-                } else {
-                ?>
+                </div>
+            <?php
+            } else {
+            ?>
+                <div class="col-6 col-md-2 col-lg-2 col-xl-2 mb-3">
                     <button type="button" onclick="saveOrder()" class="btn btn-sm btn-success btn-block">
                         <i class="far fa-check-circle"></i> Selesaikan
                     </button>
-                <?php
-                }
-                ?>
-            </div>
+                </div>
+            <?php
+            }
+            ?>
         </div>
         <hr class="mt-0">
         <?php if ($setting['invoice'] != 0) { ?>
@@ -63,7 +67,7 @@
                 <div class="col-md-12 col-lg-5 col-xl-5 mb-3">
                     <form id="form-order" autocomplete="off">
                         <input type="text" autofocus name="name" id="product-name" class="form-control mb-3" placeholder="Ketik nama barang">
-                        <input type="hidden" name="order_id" value="<?= $setting['invoice'] ?>">
+                        <input type="hidden" name="order_id" id="order-id" value="<?= $setting['invoice'] ?>">
                         <input type="hidden" name="product_id" id="product-id" value="0">
                         <div class="row skeleton_loading_product__" style="display: none">
                             <div class="col-12">

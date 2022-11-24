@@ -60,10 +60,10 @@ class Order extends CI_Controller
     public function detail()
     {
         $data = [
-            'status' => $this->om->loadAdd()['status'],
-            'data' => $this->om->loadAdd()['data'],
-            'amount' => $this->om->loadAdd()['amount'],
-            'item' => $this->om->loadAdd()['item']
+            'status' => $this->om->loadDetail()['status'],
+            'data' => $this->om->loadDetail()['data'],
+            'amount' => $this->om->loadDetail()['amount'],
+            'item' => $this->om->loadDetail()['item']
         ];
         $this->load->view('order/ajax-detail', $data);
     }
@@ -132,5 +132,19 @@ class Order extends CI_Controller
             'data' => $this->pm->dataPrint($invoice)
         ];
         $this->load->view('print/invoice', $data);
+    }
+
+    public function coba()
+    {
+        $qCanceled = $this->db->select_sum('amount')->from('order_detail')->where([
+            'order_id' => 472420221121, 'status' => 'CANCELED'
+        ])->get()->row_object();
+
+        $result = $qCanceled->amount;
+        if ($result == '') {
+            echo 0;
+        } else {
+            echo $result;
+        }
     }
 }

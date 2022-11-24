@@ -203,10 +203,6 @@
                             <td><?= $data['id'] ?></td>
                         </tr>
                         <tr>
-                            <td>Sales</td>
-                            <td><?= $data['sales'] ?></td>
-                        </tr>
-                        <tr>
                             <td>Tanggal</td>
                             <td>
                                 <?= $data['date'] ?>
@@ -271,7 +267,7 @@
             <hr>
             <div class="row">
                 <div class="col-12">
-                    P<i>E</i>RHAT<i>I</i>AN! <br>
+                    PERHATIAN! <br>
                     <i>
                         Retur barang harus tunjukkan nota
                     </i>

@@ -1,7 +1,4 @@
 <?php
-
-use PhpOffice\PhpSpreadsheet\Calculation\Financial\Securities\Price;
-
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class OrderModel extends CI_Model
@@ -69,6 +66,8 @@ class OrderModel extends CI_Model
                 'id' => $id,
                 'customer_id' => $customer,
                 'amount' => 0,
+                'canceled_amount' => 0,
+                'discount' => 0,
                 'created_at' => date('Y-m-d H:i:s'),
                 'user_id' => $user,
                 'status' => 'ACTIVE'
@@ -120,7 +119,7 @@ class OrderModel extends CI_Model
     {
         $keyword = $this->input->post('keyword', true);
 
-        $data = $this->db->select('*')->like('name', $keyword)->get('products')->result_object();
+        $data = $this->db->select('*')->like('name', $keyword)->limit(5)->get('products')->result_object();
         if ($data) {
             foreach ($data as $d) {
                 $response[] = [
@@ -278,6 +277,54 @@ class OrderModel extends CI_Model
         }
     }
 
+    public function loadDetail()
+    {
+        $invoice = $this->input->post('invoice', true);
+        $this->db->select('a.*, b.name')->from('order_detail AS a');
+        $this->db->join('products AS b', 'a.product_id = b.id');
+        $this->db->where('a.order_id', $invoice);
+        $result = $this->db->order_by('a.id', 'DESC')->get();
+
+        $data = $result->result_object();
+        $row = $result->num_rows();
+        if ($data) {
+            foreach ($data as $d) {
+                $rows[] = [
+                    'id' => $d->id,
+                    'product' => $d->name,
+                    'qty' => $this->getDetailProductOrder($d->product_id, $d->qty),
+                    'nominal' => number_format($d->nominal, 0, ',', '.'),
+                    'discount' => number_format($d->discount, 0, ',', '.'),
+                    'amount' => number_format($d->amount, 0, ',', '.'),
+                    'status' => $d->status
+                ];
+            }
+
+            $amount = $this->db->select('SUM(amount) AS amount, SUM(discount) AS discount')->from('order_detail')->where([
+                'order_id' => $invoice, 'status !=' => 'CANCELED'
+            ])->get()->row_object();
+            // $total = $amount->amount - $amount->discount;
+            $total = $amount->amount;
+
+            $item = $this->db->get_where('order_detail', [
+                'order_id' => $invoice, 'status !=' => 'CANCELED'
+            ])->num_rows();
+            return [
+                'status' => 200,
+                'data' => $rows,
+                'amount' => number_format($total, 0, ',', '.'),
+                'item' => $item . '/' . $row
+            ];
+        } else {
+            return [
+                'status' => 400,
+                'data' => 0,
+                'amount' => 0,
+                'item' => 0
+            ];
+        }
+    }
+
     public function getDetailProductOrder($id, $qty)
     {
         $this->db->select('a.unit_amount, b.name AS package, c.name AS unit')->from('products AS a');
@@ -313,7 +360,7 @@ class OrderModel extends CI_Model
         $productId = $this->input->post('product_id', true);
         $package = $this->input->post('package', true);
         $unit = $this->input->post('unit', true);
-        $nominal = (int)str_replace('.', '', $this->input->post('nominal', true));
+        $nominalPrice = (int)str_replace('.', '', $this->input->post('nominal', true));
 
         //GET PRODUCTS
         $product = $this->db->get_where('products', ['id' => $productId])->row_object();
@@ -331,15 +378,27 @@ class OrderModel extends CI_Model
             ];
         }
 
-        if ($nominal <= 0 || $nominal == '') {
+        if ($nominalPrice <= 0 || $nominalPrice == '') {
             return [
                 'status' => 400,
                 'message' => 'Nominal belum diisi'
             ];
         }
 
+        //CHECK LAST PRODUCT IN SAME TRANSACTION
+        $checkProductSameTransaction = $this->db->get_where('order_detail', [
+            'order_id' => $orderId, 'product_id' => $productId
+        ])->num_rows();
+
+        if ($checkProductSameTransaction > 0) {
+            return [
+                'status' => 400,
+                'message' => 'Barang yang sama sudah ditambahkan sebelumnya'
+            ];
+        }
+
         $unitAmount = $product->unit_amount;
-        $nominal = ceil($nominal / $unitAmount);
+        $nominal = ceil($nominalPrice / $unitAmount);
 
         if ($package <= 0) {
             //YANG DIBELI SATUAN
@@ -369,6 +428,7 @@ class OrderModel extends CI_Model
             'order_id' => $orderId,
             'product_id' => $productId,
             'qty' => $qty,
+            'price' => $nominalPrice,
             'nominal' => $price,
             'discount' => $this->getDiscount($price * $qty),
             'amount' => $price * $qty,

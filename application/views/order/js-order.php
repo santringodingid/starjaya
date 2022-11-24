@@ -2,6 +2,13 @@
     let url = $('#url').val()
     $('[data-mask]').inputmask();
 
+    $('.select2bs4').select2({
+        theme: 'bootstrap4'
+    })
+    $(document).on('select2:open', () => {
+        document.querySelector('.select2-search__field').focus();
+    });
+
     $('#reservation').daterangepicker({
         ranges: {
             'Hari ini': [moment(), moment()],

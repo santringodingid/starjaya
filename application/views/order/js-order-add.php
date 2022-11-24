@@ -2,6 +2,13 @@
     let url = $('#url').val()
     $('[data-mask]').inputmask();
 
+    $('.select2bs4').select2({
+        theme: 'bootstrap4'
+    })
+    $(document).on('select2:open', () => {
+        document.querySelector('.select2-search__field').focus();
+    });
+
     toastr.options = {
         "positionClass": "toast-top-center",
         "timeOut": "2000"
@@ -201,27 +208,40 @@
     })
 
     const save = () => {
-        $.ajax({
-            url: `${url}order/save`,
-            method: 'POST',
-            data: $('#form-order').serialize(),
-            dataType: 'JSON',
-            beforeSend: function() {
-                $('#save-order').prop('disabled', true).text('Permintaan sedang dikirim')
-                $('.wrap-loading__').show()
-            },
-            success: function(res) {
-                $('#save-order').prop('disabled', false).html('<i class="fa fa-save"></i> Simpan')
-                $('.wrap-loading__').hide()
-                if (res.status == 400) {
-                    errorAlert(res.message)
-                    return false
-                }
-                toastr.success('Yeaahh..! Satu barang berhasil ditambahkan')
-                $('#form-order')[0].reset()
-                $('#product-id').val(0)
-                $('#product-name').focus().val('')
-                loadData()
+        Swal.fire({
+            title: 'Anda yakin?',
+            text: 'Pastikan QTY dan nominal diisi dengan benar',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Lanjut!',
+            cancelButtonText: 'Cek lagi',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `${url}order/save`,
+                    method: 'POST',
+                    data: $('#form-order').serialize(),
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        $('#save-order').prop('disabled', true).text('Permintaan sedang dikirim')
+                        $('.wrap-loading__').show()
+                    },
+                    success: function(res) {
+                        $('#save-order').prop('disabled', false).html('<i class="fa fa-save"></i> Simpan')
+                        $('.wrap-loading__').hide()
+                        if (res.status == 400) {
+                            errorAlert(res.message)
+                            return false
+                        }
+                        toastr.success('Yeaahh..! Satu barang berhasil ditambahkan')
+                        $('#form-order')[0].reset()
+                        $('#product-id').val(0)
+                        $('#product-name').focus().val('')
+                        loadData()
+                    }
+                })
             }
         })
     }

@@ -5,7 +5,7 @@
     <section class="content p-3">
         <div class="row">
             <div class="col-md-2 col-lg-2 col-xl-2"></div>
-            <div class="col-md-3 col-lg-3 col-xl-3 mb-2">
+            <div class="col-7 col-md-3 col-lg-3 col-xl-3 mb-2">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
@@ -15,10 +15,10 @@
                     <input type="text" class="form-control form-control-sm" id="reservation" placeholder="Semua waktu">
                 </div>
             </div>
-            <div class="col-md-4 col-lg-4 col-xl-4 mb-2">
+            <div class="col-5 col-md-4 col-lg-4 col-xl-4 mb-2">
                 <select id="changeStatus" class="form-control form-control-sm w-100" onchange="loadData()">
                     <option value="">..:Semua Status:..</option>
-                    <option value="ORDERED">Menunggu konfirmasi</option>
+                    <option value="ORDERED" selected>Menunggu konfirmasi</option>
                     <option value="APPROVED">Menunggu pengiriman</option>
                     <option value="DELIVERED">Sedang dikirim</option>
                     <option value="DONE">Transaksi Selesai</option>
@@ -28,7 +28,7 @@
                 <input type="hidden" id="start-date" value="">
                 <input type="hidden" id="end-date" value="">
 
-                <select id="changeCustomer" class="form-control form-control-sm w-100" onchange="loadData()">
+                <select id="changeCustomer" class="form-control form-control-sm w-100 select2bs4" onchange="loadData()">
                     <option value="">..:Semua Toko:..</option>
                     <?php
                     if ($customer) {

@@ -33,21 +33,7 @@ class OrderingModel extends CI_Model
         }
         $data = $this->db->order_by('a.created_at', 'DESC')->get();
 
-        $this->db->select('SUM(amount) AS total')->from('orders');
-        $this->db->where('status !=', 'ACTIVE');
-        if ($status != '') {
-            $this->db->where('status', $status);
-        }
-        if ($customer != '') {
-            $this->db->where('customer_id', $customer);
-        }
-        $total = $this->db->get()->row_object();
-
-        return [
-            $data->result_object(),
-            $data->num_rows(),
-            $total->total
-        ];
+        return $data->result_object();
     }
 
     public function getCustomerName($id)
@@ -90,13 +76,19 @@ class OrderingModel extends CI_Model
                 ];
             }
 
-            $amount = $this->db->select_sum('amount')->from('order_detail')->where('order_id', $invoice)->get()->row_object();
+            $amount = $this->db->select_sum('amount')->from('order_detail')->where([
+                'order_id' => $invoice, 'status !=' => 'CANCELED'
+            ])->get()->row_object();
+
+            $item = $this->db->get_where('order_detail', [
+                'order_id' => $invoice, 'status !=' => 'CANCELED'
+            ])->num_rows();
 
             return [
                 'status' => 200,
                 'data' => $rows,
                 'amount' => number_format($amount->amount, 0, ',', '.'),
-                'item' => $row
+                'item' => $item . '/' . $row
             ];
         } else {
             return [
@@ -216,6 +208,32 @@ class OrderingModel extends CI_Model
         }
 
         $this->db->where(['order_id' => $order, 'product_id' => $product])->delete('stock_temp');
+        if ($this->db->affected_rows() <= 0) {
+            return [
+                'status' => 400,
+                'message' => 'Internal server error'
+            ];
+        }
+
+        //GET AMOUNT CANCELED
+        $qCanceled = $this->db->select_sum('amount')->from('order_detail')->where([
+            'order_id' => $order, 'status' => 'CANCELED'
+        ])->get()->row_object();
+
+        $result = $qCanceled->amount;
+        if ($result == '') {
+            $canceledAmount = 0;
+        } else {
+            $canceledAmount = $result;
+        }
+
+        $this->db->where('id', $order)->update('orders', ['canceled_amount' => $canceledAmount]);
+        if ($this->db->affected_rows() <= 0) {
+            return [
+                'status' => 400,
+                'message' => 'Internal server error'
+            ];
+        }
 
         return [
             'status' => 200,
@@ -412,7 +430,20 @@ class OrderingModel extends CI_Model
                 'message' => 'Belum ada item yang diorder'
             ];
         }
-        $amount = $checkOrder->amount;
+
+        //GET AMOUNT CANCELED
+        $qCanceled = $this->db->select_sum('amount')->from('order_detail')->where([
+            'order_id' => $invoice, 'status' => 'CANCELED'
+        ])->get()->row_object();
+
+        $result = $qCanceled->amount;
+        if ($result == '') {
+            $canceledAmount = 0;
+        } else {
+            $canceledAmount = $result;
+        }
+
+        $amount = $checkOrder->amount - $canceledAmount;
         $discount = $this->getDiscount($amount);
 
         //UPDATE STOCK
@@ -430,6 +461,8 @@ class OrderingModel extends CI_Model
 
         //UPDATE TABLE ORDERS
         $this->db->where('id', $invoice)->update('orders', [
+            'amount' => $checkOrder->amount,
+            'canceled_amount' => $canceledAmount,
             'discount' => $discount,
             'updated_at' => date('Y-m-d H:i:s'),
             'status' => 'DONE'
@@ -518,16 +551,17 @@ class OrderingModel extends CI_Model
             ];
         }
 
+        $total = $getOrder->amount - $getOrder->canceled_amount;
         return [
             'status' => 200,
             'message' => 'Sukses',
             'id' => $id,
             'customer' => $getOrder->name,
             'sales' => $this->session->userdata('name'),
-            'date' => datetimeIDShortFormat($getOrder->updated_at),
-            'amount' => $getOrder->amount,
+            'date' => dateTimeShortenFormat($getOrder->updated_at),
+            'amount' => $total,
             'discount' => $getOrder->discount,
-            'cash' => ($getOrder->amount - $getOrder->discount),
+            'cash' => ($total - $getOrder->discount),
             'data' => $data
         ];
     }

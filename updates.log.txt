@@ -1,3 +1,9 @@
 TABLE MARKETS/CUSTOMERS
 1 => Add created_at and updated_at field
 2 => Change ID field customers table
+
+TABLE ORDERS
+1 => Add amount_canceled field
+
+//TODO TABLE ORDER_DETAIL
+1 => Add price field

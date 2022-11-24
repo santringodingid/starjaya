@@ -23,9 +23,7 @@ class Ordering extends CI_Controller
     public function loadData()
     {
         $data = [
-            'datas' => $this->om->loadData()[0],
-            'amount' => $this->om->loadData()[1],
-            'total' => $this->om->loadData()[2]
+            'datas' => $this->om->loadData()
         ];
         $this->load->view('ordering/ajax-data', $data);
     }
@@ -125,24 +123,41 @@ class Ordering extends CI_Controller
         $this->load->view('print/invoice', $data);
     }
 
-    public function changePrice()
+    public function setPrice()
     {
-        $nominal = 2500;
-        $qty = 7;
-        $total = $nominal * $qty;
-        $endAmount = (int)substr($total, -3);
-        if ($endAmount > 0) {
-            if ($endAmount < 500) {
-                echo 'Dibawah 500';
-            } else if ($endAmount > 500) {
-                echo 'Diatas 500';
+        $this->db->select('a.*, b.unit_amount')->from('order_detail AS a');
+        $this->db->join('products AS b', 'a.product_id = b.id');
+        $data = $this->db->get()->result_object();
+        foreach ($data as $d) {
+            $amount = $d->unit_amount;
+            $qty = $d->qty / $amount;
+            if ($amount >= $d->qty) {
+                $price = ($d->amount - $d->discount) / $qty;
             } else {
-                echo '500';
+                $price = $d->nominal * $amount;
             }
-        } else {
-            echo 'Ribuan';
+
+            $this->db->where('id', $d->id)->update('order_detail', ['price' => $price]);
         }
-        echo '<br>';
-        echo $endAmount;
+    }
+
+    public function canceledAmount()
+    {
+        $data = $this->db->get('orders')->result_object();
+        foreach ($data as $d) {
+            $id = $d->id;
+            $getCanceled = $this->db->select('SUM(amount) AS amount, SUM(discount) AS discount')->from('order_detail')->where([
+                'order_id' => $id, 'status' => 'CANCELED'
+            ])->get()->row_object();
+            $amount = $getCanceled->amount;
+            $discount = $getCanceled->discount;
+            if ($amount == '') {
+                $canceledAmount = 0;
+            } else {
+                $canceledAmount = $amount - $discount;
+            }
+
+            $this->db->where('id', $id)->update('orders', ['canceled_amount' => $canceledAmount]);
+        }
     }
 }
