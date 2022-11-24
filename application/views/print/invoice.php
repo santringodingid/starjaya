@@ -285,7 +285,7 @@
         <?php } ?>
     </div>
     <script>
-        // window.print()
+        window.print()
         // setTimeout(() => {
         //     window.close()
         // }, 2000);
