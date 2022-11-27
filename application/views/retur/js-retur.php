@@ -41,25 +41,31 @@
         loadData()
     });
 
+    toastr.options = {
+        "positionClass": "toast-top-center",
+        "timeOut": "2000"
+    }
 
+    const errorAlert = message => {
+        toastr.error(`Opss.! ${ message }`)
+    }
 
     $(function() {
         loadData()
     })
 
     const loadData = () => {
+        $('.skeleton_loading__').show()
         $('#show-data').html('')
 
-        let status = $('#changeStatus').val()
         let customer = $('#changeCustomer').val()
         let startDate = $('#start-date').val()
         let endDate = $('#end-date').val()
 
         $.ajax({
-            url: `${url}ordering/loaddata`,
+            url: `${url}retur/loaddata`,
             method: 'POST',
             data: {
-                status,
                 customer,
                 startDate,
                 endDate
@@ -76,12 +82,12 @@
         })
     }
 
-    const detailOrder = id => {
+    const detailTransaction = id => {
         $.ajax({
-            url: `${url}ordering/detail`,
+            url: `${url}retur/detail`,
             method: 'POST',
             data: {
-                invoice: id
+                id
             },
             beforeSend: function() {
                 $('.wrap-loading__').show()
@@ -96,114 +102,109 @@
         })
     }
 
-    const approveOrder = id => {
-        Swal.fire({
-            title: 'Yakin, nih?',
-            text: 'Tindakan ini hanya bisa dilakukan sekali',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yakin, dong!',
-            cancelButtonText: 'Nggak jadi',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: `${url}ordering/approve`,
-                    method: 'POST',
-                    data: {
-                        id
-                    },
-                    dataType: 'JSON',
-                    beforeSend: function() {
-                        $('.wrap-loading__').show()
-                    },
-                    success: function(res) {
-                        $('.wrap-loading__').hide()
-                        if (res.status == 400) {
-                            errorAlert(res.message)
-                            return false
-                        }
-                        loadData()
-                    }
-                })
+    $('#modal-retur').on('shown.bs.modal', () => {
+        $('#invoice').focus().val('')
+    })
+
+    $('#modal-retur').on('hidden.bs.modal', () => {
+        $('#invoice').val('')
+        $('#show-retur').html('')
+        $('#customer-retur').val('')
+    })
+
+    $('#invoice').on('keyup', function(e) {
+        let key = e.which
+        if (key != 13) {
+            return false
+        }
+
+        checkTransaction()
+    })
+
+    const checkTransaction = () => {
+        let id = $('#invoice').val()
+        if (id == '') {
+            errorAlert('Isi dulu Nomor Faktur')
+            return false
+        }
+
+        $.ajax({
+            url: `${url}retur/checktransaction`,
+            method: 'POST',
+            data: {
+                id
+            },
+            dataType: 'JSON',
+            beforeSend: function() {
+                $('.wrap-loading__').show()
+            },
+            success: function(res) {
+                $('.wrap-loading__').hide()
+                if (res.status == 400) {
+                    errorAlert(res.message)
+                    $('#invoice').focus().select()
+                    return false
+                }
+                loadTransaction(id)
             }
         })
     }
 
-    const deliverOrder = id => {
-        Swal.fire({
-            title: 'Yakin, nih?',
-            text: 'Tindakan ini hanya bisa dilakukan sekali',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yakin, dong!',
-            cancelButtonText: 'Nggak jadi',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: `${url}ordering/deliver`,
-                    method: 'POST',
-                    data: {
-                        id
-                    },
-                    dataType: 'JSON',
-                    beforeSend: function() {
-                        $('.wrap-loading__').show()
-                    },
-                    success: function(res) {
-                        $('.wrap-loading__').hide()
-                        if (res.status == 400) {
-                            errorAlert(res.message)
-                            return false
-                        }
-                        loadData()
-                    }
-                })
+    const loadTransaction = id => {
+        $.ajax({
+            url: `${url}retur/loadtransaction`,
+            method: 'POST',
+            data: {
+                id
+            },
+            beforeSend: function() {
+                $('.wrap-loading__').show()
+            },
+            success: function(res) {
+                $('#show-retur').html(res)
+            },
+            complete: function() {
+                $('.wrap-loading__').hide()
             }
         })
     }
 
-    const printOut = () => $('#form-print').submit()
-
-    const deleteTransaction = id => {
+    const returOrder = id => {
         Swal.fire({
             title: 'Yakin, nih?',
-            text: 'Tindakan ini hanya bisa sekali',
+            text: 'Tindakan hanya bisa sekali',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Lanjut!',
-            cancelButtonText: 'Batal',
+            confirmButtonText: 'Lanjut',
+            cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: `${url}ordering/deletetransaction`,
+                    url: `${url}retur/returorder`,
                     method: 'POST',
-                    data: {
-                        id
-                    },
+                    data: $(`#form-retur-${id}`).serialize(),
                     dataType: 'JSON',
                     beforeSend: function() {
                         $('.wrap-loading__').show()
                     },
                     success: function(res) {
                         $('.wrap-loading__').hide()
+
                         if (res.status == 400) {
                             errorAlert(res.message)
                             return false
                         }
-                        loadData()
+
+                        toastr.success(`Yeaahh..! ${res.message} barang berhsil diretur`)
+                        loadTransaction(res.id)
                     }
                 })
             }
         })
     }
 </script>
-
 </body>
 
 </html>

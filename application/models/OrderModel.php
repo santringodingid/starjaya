@@ -224,6 +224,12 @@ class OrderModel extends CI_Model
         if ($status != '') {
             $this->db->where('status', $status);
         }
+        if ($startDate != '' && $endDate != '') {
+            $start = date('Y-m-d H:i:s', strtotime($startDate . ' 00:00:00'));
+            $end = date('Y-m-d H:i:s', strtotime($endDate . ' 23:59:59'));
+            $this->db->where('created_at >=', $start);
+            $this->db->where('created_at <=', $end);
+        }
         if ($customer != '') {
             $this->db->where('customer_id', $customer);
         }

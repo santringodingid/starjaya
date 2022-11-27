@@ -1,9 +1,16 @@
+//FIXME
 TABLE MARKETS/CUSTOMERS
 1 => Add created_at and updated_at field
 2 => Change ID field customers table
 
+//FIXME
 TABLE ORDERS
 1 => Add amount_canceled field
 
-//TODO TABLE ORDER_DETAIL
+//FIXME TABLE ORDER_DETAIL
 1 => Add price field
+2 => Add RETURED in ENUM status
+
+
+//TABLE RETURS AND RETUR_DETAIL
+1 => Add returs TABLE

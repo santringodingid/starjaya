@@ -21,6 +21,7 @@
                     'CHANGED' => '<small class="text-warning">Ada perubahan</small>',
                     'CANCELED' => '<small class="text-danger">Dibatalkan</small>',
                     'APPROVED' => '<small class="text-success">Disetujui</small>',
+                    'RETURED' => '<small class="text-danger">Diretur</small>',
                 ];
                 foreach ($data as $d) {
             ?>

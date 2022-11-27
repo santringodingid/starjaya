@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/custom.css">
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed layout-footer-fixed layout-navbar-fixed text-sm">
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed text-sm">
     <!-- Site wrapper -->
     <div class="wrapper">
         <?php $this->load->view('partials/navbar'); ?>

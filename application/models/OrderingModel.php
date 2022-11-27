@@ -546,6 +546,7 @@ class OrderingModel extends CI_Model
             $data[] = [
                 'product' => $d->product,
                 'qty' => $this->getDetailProductOrder($d->product_id, $d->qty),
+                'price' => $d->price,
                 'unit' => $d->qty,
                 'nominal' => $d->nominal,
                 'amount' => $d->amount
@@ -564,6 +565,34 @@ class OrderingModel extends CI_Model
             'discount' => $getOrder->discount,
             'cash' => ($total - $getOrder->discount),
             'data' => $data
+        ];
+    }
+
+    public function deletetransaction()
+    {
+        $id = $this->input->post('id', true);
+        $check = $this->db->get_where('orders', ['id' => $id])->num_rows();
+        if ($check <= 0) {
+            return [
+                'status' => 400,
+                'message' => 'Data pesanan tidak valid'
+            ];
+        }
+
+        $checkDetail = $this->db->get_where('order_detail', ['order_id' => $id])->num_rows();
+        if ($checkDetail <= 0) {
+            return [
+                'status' => 400,
+                'message' => 'Tidak ada item yang dipesan'
+            ];
+        }
+
+        $this->db->where('order_id', $id)->delete('order_detail');
+        $this->db->where('id', $id)->delete('orders');
+
+        return [
+            'status' => 200,
+            'message' => 'Success'
         ];
     }
 }

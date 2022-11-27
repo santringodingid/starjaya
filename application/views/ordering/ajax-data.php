@@ -20,7 +20,20 @@ if ($datas) {
                         </div>
                         <div class="col-4">
                             <small>
-                                <?= $data->id ?> <br>
+                                <?php
+                                $roleUser = $this->session->userdata('role');
+                                $grandTotal = $data->amount - $data->canceled_amount;
+                                if ($grandTotal <= 0 && $roleUser == 'DEV' || $grandTotal <= 0 && $roleUser == 'ADMIN') {
+                                ?>
+                                    <span style="cursor: pointer" onclick="deleteTransaction(<?= $data->id ?>)"><?= $data->id ?></span>
+                                <?php
+                                } else {
+                                ?>
+                                    <?= $data->id ?>
+                                <?php
+                                }
+                                ?>
+                                <br>
                                 <small class="text-muted">
                                     <?= dateTimeShortenFormat($data->created_at) ?>
                                 </small>

@@ -226,6 +226,7 @@
                                 <tr>
                                     <td class="pl-2"><?= $d['qty'] ?></td>
                                     <td class="text-center"><?= $d['unit'] ?></td>
+                                    <td class="text-right"><?= number_format($d['price'], 0, ',', '.') ?></td>
                                     <td class="text-right"><?= number_format($d['nominal'], 0, ',', '.') ?></td>
                                     <td class="text-right"><?= number_format($d['amount'], 0, ',', '.') ?></td>
                                 </tr>
@@ -277,9 +278,7 @@
             <div class="row">
                 <div class="col-12">
                     <i>ERRORRR<i> <br>
-                            <i>
-                                <?= $data['message'] ?>
-                            </i>
+                            <i><?= $data['message'] ?> </i>
                 </div>
             </div>
         <?php } ?>
