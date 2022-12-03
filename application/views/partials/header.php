@@ -18,6 +18,18 @@
     <link rel="stylesheet" href="<?= base_url() ?>template/plugins/toastr/toastr.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/custom.css">
     <script src="<?= base_url() ?>assets/OneSignalSDKWorker.js"></script>
+    <script>
+        window.OneSignal = window.OneSignal || [];
+        OneSignal.push(function() {
+            OneSignal.init({
+                appId: "51832f7c-c8bf-45da-b2a2-de9926641f7d",
+                safari_web_id: "web.onesignal.auto.064b44a8-1dd7-4e10-9d87-452ef5b9c9dd",
+                notifyButton: {
+                    enable: true,
+                },
+            });
+        });
+    </script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed text-sm">
