@@ -11,7 +11,6 @@
 
 </div>
 <!-- jQuery -->
-<script src="<?= base_url() ?>assets/OneSignalSDKWorker.js"></script>
 <script src="<?= base_url() ?>template/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="<?= base_url() ?>template/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>

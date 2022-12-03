@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="<?= base_url() ?>template/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>template/plugins/toastr/toastr.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/custom.css">
+    <script src="<?= base_url() ?>assets/OneSignalSDKWorker.js"></script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed text-sm">
