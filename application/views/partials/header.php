@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="<?= base_url() ?>template/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>template/plugins/toastr/toastr.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/custom.css">
-    <script src="<?= base_url() ?>assets/OneSignalSDKWorker.js"></script>
+    <script src="<?= base_url() ?>OneSignalSDKWorker.js"></script>
     <script>
         window.OneSignal = window.OneSignal || [];
         OneSignal.push(function() {
