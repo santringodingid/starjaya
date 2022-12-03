@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <script src="<?= base_url() ?>OneSignalSDKWorker.js"></script>
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
     <script>
         window.OneSignal = window.OneSignal || [];
         OneSignal.push(function() {
