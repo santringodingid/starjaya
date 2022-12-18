@@ -90,16 +90,16 @@
                     <table class="table table-sm">
                         <tbody>
                             <tr>
-                                <td>HPP</td>
-                                <td>:</td>
-                                <td>Rp.</td>
-                                <td class="text-right"><?= number_format($buyClean, 0, ',', '.') ?></td>
-                            </tr>
-                            <tr>
                                 <td>Penjualan bersih</td>
                                 <td>:</td>
                                 <td>Rp.</td>
                                 <td class="text-right"><?= number_format($total, 0, ',', '.') ?></td>
+                            </tr>
+                            <tr>
+                                <td>HPP</td>
+                                <td>:</td>
+                                <td>Rp.</td>
+                                <td class="text-right"><?= number_format($buyClean, 0, ',', '.') ?></td>
                             </tr>
                             <tr class="text-success font-weight-bold">
                                 <td>Laba kotor</td>
