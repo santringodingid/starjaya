@@ -43,7 +43,6 @@
                                     <button type="submit" id="login" class="form-control btn btn-primary rounded submit px-3">Login</button>
                                 </div>
                             </form>
-                            <a target="_blank" href="https://api.whatsapp.com/send?phone=6282330814966&text=Assalamualaikum">Belum punya username? Hubungi panitia</a>
                         </div>
                     </div>
                 </div>

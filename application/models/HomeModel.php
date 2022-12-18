@@ -3,44 +3,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class HomeModel extends CI_Model
 {
-    public function loadData()
+    public function topFive()
     {
-        //PARTICIAPNTS
-        $total = $this->db->select('COUNT(id) AS total')->from('participants')->get()->row_object();
-        //CATEGORY
-        $this->db->select('COUNT(id) AS total, category')->from('participants');
-        $category = $this->db->group_by('category')->get()->result_object();
-        //SCHOOL
-        $school = $this->db->select('COUNT(DISTINCT(school_id)) AS total')->from('participants')->get()->row_object();
+        $product = $this->db->select('COUNT(id) AS total')->from('products')->get()->row_object();
 
-        $male = 0;
-        $female = 0;
+        $this->db->select('SUM(a.qty) AS amount, b.name')->from('order_detail AS a');
+        $this->db->join('products AS b', 'b.id = a.product_id');
+        $this->db->group_by('a.product_id')->limit(5)->order_by('amount', 'DESC');
+        $top = $this->db->get()->result_object();
 
-        foreach ($category as $c) {
-            if ($c->category == 1) {
-                $male = $c->total;
-            } else {
-                $female = $c->total;
-            }
-        }
+        $this->db->select('SUM(a.qty) AS amount, b.name')->from('order_detail AS a');
+        $this->db->join('products AS b', 'b.id = a.product_id');
+        $this->db->group_by('a.product_id')->limit(5)->order_by('amount', 'ASC');
+        $bottom = $this->db->get()->result_object();
 
         return [
-            $total->total,
-            $male,
-            $female,
-            $school->total
+            $product,
+            $top,
+            $bottom
         ];
-    }
-
-    public function getUndian()
-    {
-        $data = $this->db->get_where('schools', [
-            'id' => $this->session->userdata('user_id')
-        ])->row_object();
-        if ($data) {
-            return $data->undian;
-        } else {
-            return 0;
-        }
     }
 }
