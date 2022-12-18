@@ -90,7 +90,7 @@
                     <table class="table table-sm">
                         <tbody>
                             <tr>
-                                <td>Pembelian bersih</td>
+                                <td>HPP</td>
                                 <td>:</td>
                                 <td>Rp.</td>
                                 <td class="text-right"><?= number_format($buyClean, 0, ',', '.') ?></td>
